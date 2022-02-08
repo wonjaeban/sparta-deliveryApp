@@ -13,7 +13,6 @@ import javax.persistence.*;
 public class FoodOrder {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "foodOrderId")
     @Id
     private Long id;
 
@@ -34,6 +33,6 @@ public class FoodOrder {
     public FoodOrder(FoodsDto foodsDto) {
         this.foodName = foodsDto.getName();
         this.quantity = foodsDto.getQuantity();
-        this.price = foodsDto.getPrices();
+        this.price = foodsDto.getPrice();
     }
 }

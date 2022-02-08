@@ -22,16 +22,11 @@ public class Order {
     @Column(nullable = false)
     private Long restaurantId;
 
-    @OneToMany
-    @JoinColumn(name = "foodOrderId")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(nullable = false)
     private List<FoodOrder> foods;
 
 
-    public Order(Long restaurantId, List<FoodOrder> foods) {
-        this.restaurantId = restaurantId;
-        this.foods = foods;
-    }
     public Order(OrderRequestDto requestDto, List<FoodOrder> foods) {
         this.restaurantId = requestDto.getRestaurantId();
         this.foods = foods;

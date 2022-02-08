@@ -11,5 +11,5 @@ public class FoodsDto {
 
     private String name;
     private int quantity;
-    private int prices;
+    private int price;
 }

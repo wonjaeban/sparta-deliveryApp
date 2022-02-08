@@ -29,10 +29,12 @@ public class OrderService {
 
     @Transactional
     public  OrderReturnDto saving(OrderRequestDto requestDto) throws Exception {
-        List<FoodsDto> foodOrders = null;
-        OrderReturnDto orderReturnDto = null;
-        List<FoodOrder> foodorders1 = null;
+        List<FoodsDto> foodOrders = new ArrayList<>();;
+        OrderReturnDto orderReturnDto = new OrderReturnDto();
+        List<FoodOrder> foodorders1 = new ArrayList<>();
+
         int totalPrice = 0;
+        String restaurantName;
         for (int i = 0; i < requestDto.getFoods().size(); i++) {
             if (requestDto.getFoods().get(i).getQuantity() < 1 || requestDto.getFoods().get(i).getQuantity() > 100) {
                 throw new IllegalArgumentException("허용수량이 아닙니다");
@@ -45,53 +47,62 @@ public class OrderService {
                     Food realFood = foodNames.get();
                     foodName = realFood.getName();
                     foodPrice = realFood.getPrice();
-                    foodPrices = foodPrice * requestDto.getFoods().get(i).getQuantity();
+                    foodPrices = foodPrice * (requestDto.getFoods().get(i).getQuantity());
                     totalPrice += foodPrices;
-                } else {
-                    throw new Exception();
+                    FoodsDto fooddto1 = new FoodsDto();
+                    fooddto1.setName(foodName);
+                    fooddto1.setQuantity(requestDto.getFoods().get(i).getQuantity());
+                    fooddto1.setPrice(foodPrices);
+//                    반환해줄 음식명단.
+                    foodOrders.add(fooddto1);
+//                      나중에 주문 정보 불러오기 위한 DB저장. 자식 테이블 하나씩 완성.
+                    FoodOrder foodOrder = new FoodOrder(fooddto1);
+                    foodorderRepository.save(foodOrder);
+                    foodorders1.add(foodOrder);
                 }
-                FoodsDto fooddto = null;
-                fooddto.setName(foodName);
-                fooddto.setQuantity(requestDto.getFoods().get(i).getQuantity());
-                fooddto.setPrices(foodPrices);
-                foodOrders = new ArrayList<>();
-                foodOrders.add(fooddto);
-
-                FoodOrder foodOrder = new FoodOrder(fooddto);
-                FoodOrder FoodOrder1 = foodorderRepository.save(foodOrder);
-                foodorders1 = null;
-                foodorders1.add(FoodOrder1);
             }
         }
-        Order order = new Order(requestDto, foodorders1);
-        orderRepository.save(order);
+//                      부모 테이블 완성.
+                    Order order1 = new Order(requestDto, foodorders1);
+                    orderRepository.save(order1);
 
-        Optional<Restaurant> restaurantNames = restaurantRepository.findById(requestDto.getRestaurantId());
-        if (restaurantNames.isPresent()) {
-            Restaurant restaurant = restaurantNames.get();
-            String restaurantName = restaurant.getName();
-            int deliveryFee = restaurant.getDeliveryFee();
-            totalPrice += deliveryFee;
-            orderReturnDto.setRestaurantName(restaurantName);
-            orderReturnDto.setDeliveryFee(deliveryFee);
-            orderReturnDto.setTotalPrice(totalPrice);
-        }
-        else {
-            throw new Exception();
-        }
-        orderReturnDto.setFoods(foodOrders);
+
+                    Optional<Restaurant> restaurantNames = restaurantRepository.findById(requestDto.getRestaurantId());
+                    if (restaurantNames.isPresent()) {
+                        Restaurant restaurant = restaurantNames.get();
+                        restaurantName = restaurant.getName();
+                        int deliveryFee = restaurant.getDeliveryFee();
+                        int minOrderPrice = restaurant.getMinOrderPrice();
+                        if (totalPrice <= minOrderPrice) {
+                            throw new IllegalArgumentException("최소주문가격 미만입니다.");
+                        } else {
+                            totalPrice += deliveryFee;
+                            orderReturnDto.setRestaurantName(restaurantName);
+                            orderReturnDto.setDeliveryFee(deliveryFee);
+                            orderReturnDto.setTotalPrice(totalPrice);
+                            orderReturnDto.setFoods(foodOrders);
+                        }
+                    }
+                    else {
+                        throw new Exception();
+                    }
         return orderReturnDto;
+    }
 
 
+    public List<OrderReturnDto> finding() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderReturnDto> orderReturnDtos;
 
-
+        for (int i = 0; i <orders.size(); i++) {
+            OrderReturnDto orderReturnDto;
+            orders.get(i).getRestaurantId();
+            orderReturnDto.setRestaurantName();
+        }
 
     }
 
 
 
-
-
-
-    }
+}
 
