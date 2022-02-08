@@ -17,7 +17,7 @@ public class FoodOrder {
     private Long id;
 
     @Column(nullable = false)
-    private String foodName;
+    private String name;
 
     @Column(nullable = false)
     private int quantity;
@@ -26,12 +26,12 @@ public class FoodOrder {
     private int price;
 
     public FoodOrder(String foodName, int quantity, int price) {
-        this.foodName = foodName;
+        this.name = foodName;
         this.quantity = quantity;
         this.price = price;
     }
     public FoodOrder(FoodsDto foodsDto) {
-        this.foodName = foodsDto.getName();
+        this.name = foodsDto.getName();
         this.quantity = foodsDto.getQuantity();
         this.price = foodsDto.getPrice();
     }

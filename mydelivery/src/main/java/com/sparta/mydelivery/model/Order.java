@@ -3,6 +3,7 @@ package com.sparta.mydelivery.model;
 import com.sparta.mydelivery.dto.FoodDto;
 import com.sparta.mydelivery.dto.FoodsDto;
 import com.sparta.mydelivery.dto.OrderRequestDto;
+import com.sparta.mydelivery.dto.OrderReturnDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,15 +21,23 @@ public class Order {
     private Long id;
 
     @Column(nullable = false)
-    private Long restaurantId;
+    private String restaurantName;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(nullable = false)
     private List<FoodOrder> foods;
 
+    @Column(nullable = false)
+    private int deliveryFee;
 
-    public Order(OrderRequestDto requestDto, List<FoodOrder> foods) {
-        this.restaurantId = requestDto.getRestaurantId();
-        this.foods = foods;
+    @Column(nullable = false)
+    private int totalPrice;
+
+
+    public Order(OrderReturnDto orderReturnDto) {
+        this.restaurantName = orderReturnDto.getRestaurantName();
+        this.foods = orderReturnDto.getFoods();
+        this.deliveryFee = orderReturnDto.getDeliveryFee();
+        this.totalPrice = orderReturnDto.getTotalPrice();
     }
 }

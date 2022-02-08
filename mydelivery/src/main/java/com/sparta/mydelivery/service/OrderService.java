@@ -62,10 +62,6 @@ public class OrderService {
                 }
             }
         }
-//                      부모 테이블 완성.
-                    Order order1 = new Order(requestDto, foodorders1);
-                    orderRepository.save(order1);
-
 
                     Optional<Restaurant> restaurantNames = restaurantRepository.findById(requestDto.getRestaurantId());
                     if (restaurantNames.isPresent()) {
@@ -80,7 +76,10 @@ public class OrderService {
                             orderReturnDto.setRestaurantName(restaurantName);
                             orderReturnDto.setDeliveryFee(deliveryFee);
                             orderReturnDto.setTotalPrice(totalPrice);
-                            orderReturnDto.setFoods(foodOrders);
+                            orderReturnDto.setFoods(foodorders1);
+                            //                      부모 테이블 완성.
+                            Order order1 = new Order(orderReturnDto);
+                            orderRepository.save(order1);
                         }
                     }
                     else {
@@ -92,14 +91,18 @@ public class OrderService {
 
     public List<OrderReturnDto> finding() {
         List<Order> orders = orderRepository.findAll();
-        List<OrderReturnDto> orderReturnDtos;
+        List<OrderReturnDto> orderReturnDtos = new ArrayList<>();
 
         for (int i = 0; i <orders.size(); i++) {
-            OrderReturnDto orderReturnDto;
-            orders.get(i).getRestaurantId();
-            orderReturnDto.setRestaurantName();
-        }
+            OrderReturnDto orderReturnDto = new OrderReturnDto();
 
+            orderReturnDto.setRestaurantName(orders.get(i).getRestaurantName());
+            orderReturnDto.setFoods(orders.get(i).getFoods());
+            orderReturnDto.setDeliveryFee(orders.get(i).getDeliveryFee());
+            orderReturnDto.setTotalPrice(orders.get(i).getTotalPrice());
+            orderReturnDtos.add(orderReturnDto);
+        }
+        return orderReturnDtos;
     }
 
 
