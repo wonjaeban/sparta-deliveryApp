@@ -35,6 +35,10 @@ public class OrderService {
 
         int totalPrice = 0;
         String restaurantName;
+//매운맛 주소 추가
+        if (requestDto.getX() < 0 || requestDto.getX() > 99 || requestDto.getY() < 0 || requestDto.getY() > 99) {
+            throw new IllegalArgumentException("주소가 잘못 되었습니다");
+        }
         for (int i = 0; i < requestDto.getFoods().size(); i++) {
             if (requestDto.getFoods().get(i).getQuantity() < 1 || requestDto.getFoods().get(i).getQuantity() > 100) {
                 throw new IllegalArgumentException("허용수량이 아닙니다");
@@ -68,6 +72,12 @@ public class OrderService {
                         Restaurant restaurant = restaurantNames.get();
                         restaurantName = restaurant.getName();
                         int deliveryFee = restaurant.getDeliveryFee();
+
+//                        거리별 배달비 할증 추가
+                        double sum = (requestDto.getX() - restaurant.getX()) * (requestDto.getX() - restaurant.getX()) + (requestDto.getY() - restaurant.getY()) * (requestDto.getY() - restaurant.getY());
+                        sum = Math.sqrt(sum);
+                        deliveryFee += (sum * 500);
+
                         int minOrderPrice = restaurant.getMinOrderPrice();
                         if (totalPrice <= minOrderPrice) {
                             throw new IllegalArgumentException("최소주문가격 미만입니다.");

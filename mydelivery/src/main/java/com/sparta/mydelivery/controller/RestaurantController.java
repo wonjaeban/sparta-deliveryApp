@@ -5,10 +5,7 @@ import com.sparta.mydelivery.model.Restaurant;
 import com.sparta.mydelivery.repository.RestaurantRepository;
 import com.sparta.mydelivery.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/restaurants")
-    public List<Restaurant> getRestaurants() {
-        return restaurantRepository.findAll();
+    public List<Restaurant> getRestaurants(@RequestParam int x, int y) {
+        return restaurantService.finding(x, y);
     }
 }

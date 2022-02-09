@@ -24,15 +24,18 @@ public class Restaurant {
     @Column(nullable = false)
     private int deliveryFee;
 
-    public Restaurant(String name, int minOrderPrice, int deliveryFee) {
-        this.name = name;
-        this.minOrderPrice = minOrderPrice;
-        this.deliveryFee = deliveryFee;
-    }
+    @Column(nullable = false)
+    private int x;
+
+    @Column(nullable = false)
+    private int y;
+
     public Restaurant(RestaurantDto requestDto) {
         this.name = requestDto.getName();
         this.minOrderPrice = requestDto.getMinOrderPrice();
         this.deliveryFee = requestDto.getDeliveryFee();
+        this.x = requestDto.getX();
+        this.y = requestDto.getY();
     }
 
 }
